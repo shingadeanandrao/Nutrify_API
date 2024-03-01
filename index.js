@@ -16,9 +16,17 @@ const trackingModel= require('./models/trackingModel')
 //import token
 const verifyToken = require('./VerifyToken/verifyToken')
 
+//import cors
+
+const cors = require('cors');
+
+
+
 const app =express()
 
 app.use(express.json())
+
+app.use(cors())
 
 
 mongoose.connect("mongodb://0.0.0.0:27017/nutrify")
@@ -67,7 +75,7 @@ app.post("/login",async(req,res)=>{
                 JWT.sign({email:userCred.email},"nutrify",(err,token)=>{
 
                     if(!err){
-                        res.send({message:"Login Successful"  , token:token})
+                        res.send({message:"Login Successful"  , token:token, userId:user._id,name:user.name})
                     }
                 })
                 
@@ -137,7 +145,7 @@ app.get("/track/:userId/:date",verifyToken,async (req,res)=>{
 
     let userId = req.params.userId;
     let date = new Date(req.params.date);
-    let strDate = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear();
+    let strDate = (date.getMonth()+1)+"/"+date.getDate()+"/"+date.getFullYear();
     console.log(strDate)
 
     try
